@@ -39,6 +39,13 @@ internal static class CameraRig
         state.JumpBlend = Mathf.MoveTowards(
             state.JumpBlend, (player.isJumping || player.isFallingFromJump) ? 1f : 0f, Time.deltaTime / Constants.JumpingBlendTime);
 
+        float lookDownOffset = 0f;
+        if (ConfigManager.DisableHeadBob.Value)
+        {
+            float lookDownAngle = Mathf.Max(0f, -camTransform.forward.y);
+            lookDownOffset = lookDownAngle * 0.4f;
+        }
+
         float upOffset = Constants.EyeOffsetUp
             + (state.CrouchBlend * Constants.CrouchEyeOffsetUp)
             + (state.HoldBlend * Constants.HoldingEyeOffsetUp)
@@ -52,7 +59,8 @@ internal static class CameraRig
             Constants.EyeOffsetForward, Constants.EyeOffsetForwardOnLadder, state.LadderBlend)
             + (state.HoldBlend * Constants.HoldingEyeOffsetForward)
             + (state.RunBlend * Constants.RunningEyeOffsetForward)
-            + (state.JumpBlend * Constants.JumpingEyeOffsetForward);
+            + (state.JumpBlend * Constants.JumpingEyeOffsetForward)
+            + lookDownOffset;
 
         Vector3 baseWorld = parent != null
             ? parent.TransformPoint(state.CameraBaseLocalPosition)
@@ -135,9 +143,16 @@ internal static class CameraRig
         Vector3 fullFollow = bone.position + (yawRotation * state.EyeAnchorLocal);
         Vector3 deviationLocal = Quaternion.Inverse(yawRotation) * (fullFollow - baseWorld);
 
-        deviationLocal.x *= Constants.FollowStrengthHorizontal;
-        deviationLocal.z *= Constants.FollowStrengthHorizontal;
-        deviationLocal.y *= Constants.FollowStrengthVertical;
+        if (!ConfigManager.DisableHeadBob.Value)
+        {
+            deviationLocal.x *= Constants.FollowStrengthHorizontal;
+            deviationLocal.z *= Constants.FollowStrengthHorizontal;
+            deviationLocal.y *= Constants.FollowStrengthVertical;
+        }
+        else
+        {
+            deviationLocal = Vector3.zero;
+        }
 
         deviationLocal = StabilizeSprintBob(state, player, deviationLocal);
         deviationLocal = NeckGuardedFollow(state, player, deviationLocal);

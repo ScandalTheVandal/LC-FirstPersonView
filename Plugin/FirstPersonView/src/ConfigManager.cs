@@ -10,6 +10,7 @@ public static class ConfigManager
     public static ConfigEntry<ItemDitherMode> ItemDither = null!;
 
     public static ConfigEntry<float> HandOffsetZ = null!;
+    public static ConfigEntry<bool> DisableHeadBob = null!;
 
     public static ConfigEntry<bool> EnableMoreCompanyCompatibility = null!;
     public static ConfigEntry<bool> EnableTooManyEmotesCompatibility = null!;
@@ -22,38 +23,6 @@ public static class ConfigManager
 
     internal static void Initialize(ConfigFile config)
     {
-        HeldItemFadeStyle = config.Bind(
-            "2. Held Item",
-            "FadeMode",
-            HeldItemFadeMode.Dither,
-            "Held item will start to dither when it is close to or filling the players camera. " +
-            "Dither: a fade that lets you see through the item. " +
-            "Off: nothing dithers."
-        );
-
-        Hands = config.Bind(
-            "3. Hands",
-            "HandsMode",
-            HandsMode.Vanilla,
-            "Which arms hold an item in first person. " +
-            "Vanilla: real first-person arms that aim the item with the camera [ recommended ]. " +
-            "ThirdPerson: the body own arms hold the item, more consistent body, but with known issues."
-        );
-
-        ItemDither = config.Bind(
-            "2. Held Item",
-            "ItemDither",
-            ItemDitherMode.ThirdPerson,
-            "Which hands mode the held item dithers in."
-        );
-
-        HandOffsetZ = config.Bind(
-            "2. Held Item",
-            "HandOffsetZ",
-            0f,
-            new ConfigDescription("First-person hand offset.",
-                new AcceptableValueRange<float>(-1f, 1f)));
-
         EnableMoreCompanyCompatibility = config.Bind(
             "1. Compatibility",
             "Enable MoreCompany Compatibility",
@@ -108,6 +77,45 @@ public static class ConfigManager
             "ShowRightShin",
             true,
             "Show right shin cosmetics."
+        );
+
+        HeldItemFadeStyle = config.Bind(
+            "2. Held Item",
+            "FadeMode",
+            HeldItemFadeMode.Dither,
+            "Held item will start to dither when it is close to or filling the players camera. " +
+            "Dither: a fade that lets you see through the item. " +
+            "Off: nothing dithers."
+        );
+
+        ItemDither = config.Bind(
+            "2. Held Item",
+            "ItemDither",
+            ItemDitherMode.ThirdPerson,
+            "Which hands mode the held item dithers in."
+        );
+
+        HandOffsetZ = config.Bind(
+            "2. Held Item",
+            "HandOffsetZ",
+            0f,
+            new ConfigDescription("First-person hand offset.",
+                new AcceptableValueRange<float>(-1f, 1f)));
+
+        Hands = config.Bind(
+            "3. Hands",
+            "HandsMode",
+            HandsMode.Vanilla,
+            "Which arms hold an item in first person. " +
+            "Vanilla: real first-person arms that aim the item with the camera [ recommended ]. " +
+            "ThirdPerson: the body own arms hold the item, more consistent body, but with known issues."
+        );
+
+        DisableHeadBob = config.Bind(
+            "4. Camera",
+            "DisableHeadBob",
+            false,
+            "Disable head bobbing from walking and running animations."
         );
     }
 }
