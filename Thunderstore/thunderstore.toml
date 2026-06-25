@@ -6,7 +6,7 @@ repository = "https://thunderstore.io"
 
 [package]
 namespace = "seechela"
-name = "First-Person_View"
+name = "First_Person_View"
 description = "See your own body."
 websiteUrl = "https://github.com/se3ya/LC-FirstPersonView"
 containsNswContent = false
