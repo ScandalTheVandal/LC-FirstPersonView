@@ -46,7 +46,7 @@ internal static class Constants
     public const float EyeOffsetForwardOnLadder = 0f;
     public const float EyeOffsetUp = 0f;
     public const float EyeOffsetRight = 0f;
-    public const float CrouchEyeOffsetUp = 0.15f;   // raise the eye while crouching so it doesn't sink into the neck
+    public const float CrouchEyeOffsetUp = 0.13f;   // raise the eye while crouching so it doesn't sink into the neck
 
     // eye nudge while holding
     public const float HoldingEyeOffsetForward = 0.15f;   // extra forward push while holding
