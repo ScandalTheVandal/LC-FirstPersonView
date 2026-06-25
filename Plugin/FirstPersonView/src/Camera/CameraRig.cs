@@ -138,6 +138,7 @@ internal static class CameraRig
         deviationLocal.x *= Constants.FollowStrengthHorizontal;
         deviationLocal.z *= Constants.FollowStrengthHorizontal;
         deviationLocal.y *= Constants.FollowStrengthVertical;
+        deviationLocal.y = DampHeadBob(state, player, deviationLocal.y);
 
         deviationLocal = StabilizeSprintBob(state, player, deviationLocal);
         deviationLocal = NeckGuardedFollow(state, player, deviationLocal);
@@ -146,6 +147,29 @@ internal static class CameraRig
             deviationLocal = deviationLocal.normalized * Constants.MaxFollowOffset;
 
         return baseWorld + (yawRotation * deviationLocal);
+    }
+
+    private static float DampHeadBob(LocalBodyState state, PlayerControllerB player, float rawY)
+    {
+        if (!state.DisableBobSmoothInitialized)
+        {
+            state.DisableBobSmoothedY = rawY;
+            state.DisableBobSmoothInitialized = true;
+        }
+        else
+        {
+            float t = 1f - Mathf.Exp(-Time.deltaTime / Constants.DisableHeadBobTau);
+            state.DisableBobSmoothedY = Mathf.Lerp(state.DisableBobSmoothedY, rawY, t);
+        }
+
+        bool removeBob = ConfigManager.DisableHeadBob.Value
+            && !player.isCrouching
+            && state.CrouchBlend <= 0f
+            && (player.isWalking || player.isSprinting || player.isJumping || player.isFallingFromJump);
+        state.DisableBobBlend = Mathf.MoveTowards(
+            state.DisableBobBlend, removeBob ? 1f : 0f, Time.deltaTime / Constants.DisableHeadBobBlendTime);
+
+        return Mathf.Lerp(rawY, state.DisableBobSmoothedY, state.DisableBobBlend);
     }
 
     private static Vector3 StabilizeSprintBob(
@@ -314,6 +338,8 @@ internal static class CameraRig
         state.NeckGuardRelease = 0f;
         state.NeckGuardFloorActive = false;
         state.DeviationSmoothInitialized = false;
+        state.DisableBobSmoothInitialized = false;
+        state.DisableBobBlend = 0f;
         state.HasCameraTarget = false;
 
         if (!state.CameraOffsetApplied)
