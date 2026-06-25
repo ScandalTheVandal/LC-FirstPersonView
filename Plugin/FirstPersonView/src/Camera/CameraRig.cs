@@ -39,11 +39,15 @@ internal static class CameraRig
         state.JumpBlend = Mathf.MoveTowards(
             state.JumpBlend, (player.isJumping || player.isFallingFromJump) ? 1f : 0f, Time.deltaTime / Constants.JumpingBlendTime);
 
+        state.MoveBlend = Mathf.MoveTowards(
+            state.MoveBlend, (player.isWalking || player.isSprinting) ? 1f : 0f, Time.deltaTime / 0.2f);
+
         float lookDownOffset = 0f;
         if (ConfigManager.DisableHeadBob.Value)
         {
             float lookDownAngle = Mathf.Max(0f, -camTransform.forward.y);
-            lookDownOffset = lookDownAngle * 0.3f;
+            float offsetMultiplier = Mathf.Lerp(0.2f, 0.35f, state.MoveBlend);
+            lookDownOffset = lookDownAngle * offsetMultiplier;
         }
 
         float upOffset = Constants.EyeOffsetUp
@@ -324,6 +328,7 @@ internal static class CameraRig
         state.HoldBlend = 0f;
         state.RunBlend = 0f;
         state.JumpBlend = 0f;
+        state.MoveBlend = 0f;
         state.NeckGuardInitialized = false;
         state.NeckGuardTail = 0f;
         state.NeckGuardRelease = 0f;

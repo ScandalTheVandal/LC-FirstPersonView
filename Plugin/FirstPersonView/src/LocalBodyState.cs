@@ -38,6 +38,7 @@ internal sealed class LocalBodyState
     public float HoldBlend;
     public float RunBlend;
     public float JumpBlend;
+    public float MoveBlend;
     public Vector3 SmoothedDeviationLocal;
     public bool DeviationSmoothInitialized;
     public Vector3 SwingRest;
