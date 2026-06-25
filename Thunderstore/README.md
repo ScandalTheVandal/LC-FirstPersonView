@@ -30,6 +30,7 @@
   - *Vanilla (default)*: Held item will dither for vanilla hands mode
   - *Third Person*: Held item will dither for third person hands mode
 - **Hand offset Z** - Vanilla first-person arms offset
+- **Disable Head Bob** - false by default, mostly reduceds the camera from following the up/down head bob when walking, running and jumping
 
 ## Credits
 
