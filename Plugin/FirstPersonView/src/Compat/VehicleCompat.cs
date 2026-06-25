@@ -15,7 +15,7 @@ namespace FirstPersonView.Compat;
 public static class VehicleCompat
 {
     [HarmonyPatch(nameof(VehicleController.Update))]
-    [HarmonyPrefix]
+    [HarmonyPostfix]
     public static void Update_Key_Postfix(VehicleController __instance)
     {
         if (!__instance.IsSpawned)
